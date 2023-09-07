@@ -114,6 +114,25 @@ public class ABB<T extends Comparable<T>> {
 	}
 	
 	//Problema5
+public boolean contieneSubarbol(ABB sub) {
+		if(sub==null)
+			return false;
+		else {
+			Nodo aux1=sub.raiz;
+			Nodo aux2=raiz;
+			return contieneSubarbol(aux1, aux2);
+		}
+	}
+	public boolean contieneSubarbol(Nodo aux1, Nodo aux2) {
+		if(aux1==null && aux2==null)
+			return true;
+		else if(aux1.dato!=aux2.dato || aux1==null || aux2==null)
+			return false;
+		else
+//		if (aux1.dato==aux2.dato && (aux1.izq!=null && aux2.izq!=null) && (aux1.der!=null && aux2.der!=null) && (aux1.cont==aux2.cont)) {
+			return contieneSubarbol(aux1.izq, aux2.izq) && contieneSubarbol(aux1.der, aux2.der) && true;
+	}
+
 	public boolean contieneSubarbol(ABB sub) {
 		if(sub==null)
 			return false;
