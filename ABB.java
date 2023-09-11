@@ -22,7 +22,50 @@ public class ABB<T extends Comparable<T>> {
 	public ABB() {
 		raiz = null;
 	}
-	
+
+	//PRUEBA 1
+	//Problema1
+	 public int longitudDeCamino(T ini, T fin) {
+		 Nodo aux=nodo(ini);
+		 if(!existe(ini) || !existe(fin) || (aux.der==null && aux.izq==null))
+			 return -1;
+		 else {
+			 return longitudDeCamino(ini,fin,aux);
+		 }
+	 }
+	 private int longitudDeCamino(T ini, T fin, Nodo aux) {
+		 if(aux.dato==fin)
+			 return 0;
+		 else {
+			 if(fin.compareTo((T) aux.dato)<0)
+				 return longitudDeCamino(ini,fin,aux.izq)+1;
+			 else
+				 return longitudDeCamino(ini,fin,aux.der)+1;
+		 }
+	 }
+	 
+	 //Problema2
+	 public boolean eliminarSubarbol(T dato) {
+		 if(!existe(dato))
+			 return false;
+		 else {
+			 Nodo aux=nodo(dato);
+			 eliminarSubarbol(aux.izq);
+			 eliminarSubarbol(aux.der);
+			 return true;
+		 }
+	 }
+	 private void eliminarSubarbol(Nodo aux) {
+		 if(aux!=null) {
+			 if(aux.izq!=null || aux.der!=null){
+				 eliminarSubarbol(aux.izq);
+				 eliminarSubarbol(aux.der);
+			 }
+			 if(aux.izq==null && aux.der==null)
+				 eliminarNodo((T) aux.dato);
+		 }
+	 }
+	//TAREA 2
 	//Problema1
 	public boolean esCompleto(T dato) {
 		Nodo aux=nodo(dato);
@@ -43,7 +86,7 @@ public class ABB<T extends Comparable<T>> {
 		int altDer=altNodo(aux.der);
 		return Math.max(altIzq, altDer)+1;
 	}
-	
+
 	//Problema2
 	public int nodosRepetidos(T dato) {
 		if(dato==null)
@@ -51,7 +94,7 @@ public class ABB<T extends Comparable<T>> {
 		else {
 			Nodo aux=nodo(dato);
 			return nodosRepetidos(aux);
-			
+
 		}
 	}
 	private int nodosRepetidos(Nodo aux) {
@@ -64,30 +107,30 @@ public class ABB<T extends Comparable<T>> {
 		}
 		return 0;
 	}
-	
+
 	//Problema3
 	public LinkedList<T> listaDeNietos(T dato) {
-	    if (!existe(dato))
-	        return null;
-	    else {
-	        Nodo aux = nodo(dato);
-	        LinkedList<T> lista = new LinkedList<>();
-	        if (aux.izq != null) {
-	            if (aux.izq.izq != null)
-	                lista.add((T) aux.izq.izq.dato);
-	            if (aux.izq.der != null)
-	                lista.add((T) aux.izq.der.dato);
-	        }
-	        if (aux.der != null) {
-	            if (aux.der.izq != null)
-	                lista.add((T) aux.der.izq.dato);
-	            if (aux.der.der != null)
-	                lista.add((T) aux.der.der.dato);
-	        }
-	        return lista;
-	    }
+		if (!existe(dato))
+			return null;
+		else {
+			Nodo aux = nodo(dato);
+			LinkedList<T> lista = new LinkedList<>();
+			if (aux.izq != null) {
+				if (aux.izq.izq != null)
+					lista.add((T) aux.izq.izq.dato);
+				if (aux.izq.der != null)
+					lista.add((T) aux.izq.der.dato);
+			}
+			if (aux.der != null) {
+				if (aux.der.izq != null)
+					lista.add((T) aux.der.izq.dato);
+				if (aux.der.der != null)
+					lista.add((T) aux.der.der.dato);
+			}
+			return lista;
+		}
 	}
-	
+
 	//Problema4
 	public boolean mismaEstructura(ABB arb) {
 		if(raiz!=null) {
@@ -112,41 +155,129 @@ public class ABB<T extends Comparable<T>> {
 		}
 		return true;
 	}
-	
+
 	//Problema5
-public boolean contieneSubarbol(ABB sub) {
+	public boolean contieneSubarbol(ABB sub) {
 		if(sub==null)
 			return false;
 		else {
 			Nodo aux1=sub.raiz;
 			Nodo aux2=raiz;
+			if(!aux1.dato.equals(aux2.dato)) {
+				if(existe((T) aux1.dato)) {
+					aux2=nodo((T) aux1.dato);
+					return contieneSubarbol(aux1, aux2);
+				}else
+					return false;
+			}
 			return contieneSubarbol(aux1, aux2);
 		}
 	}
-	public boolean contieneSubarbol(Nodo aux1, Nodo aux2) {
+	private boolean contieneSubarbol(Nodo aux1, Nodo aux2) {
 		if(aux1==null && aux2==null)
 			return true;
 		else if(aux1.dato!=aux2.dato || aux1==null || aux2==null)
 			return false;
 		else
-//		if (aux1.dato==aux2.dato && (aux1.izq!=null && aux2.izq!=null) && (aux1.der!=null && aux2.der!=null) && (aux1.cont==aux2.cont)) {
-			return contieneSubarbol(aux1.izq, aux2.izq) && contieneSubarbol(aux1.der, aux2.der) && true;
+			return contieneSubarbol(aux1.izq, aux2.izq) && contieneSubarbol(aux1.der, aux2.der);
 	}
 
-	public boolean contieneSubarbol(ABB sub) {
-		if(sub==null)
-			return false;
+	//Problema6
+	public T ancestroComun(T dato1, T dato2) {
+		Nodo aux=raiz;
+		boolean ite=true;
+		while(ite) {
+			if(dato1.compareTo((T) aux.dato)<0 && dato2.compareTo((T) aux.dato)<0)
+				aux=aux.izq;
+			else if(dato1.compareTo((T) aux.dato)>0 && dato2.compareTo((T) aux.dato)>0)
+				aux=aux.der;
+			else
+				ite=false;
+		}
+		return (T) aux.dato;
+	}
+
+	//Problema7
+	public boolean esEquilibrado() {
+		Nodo aux=nodo((T) raiz);
+		if(esEquilibrado(aux)>-1)
+			return true;
+		return false;
+	}
+	private int esEquilibrado(Nodo aux) {
+		if(aux==null)
+			return -1;
 		else {
-			Nodo aux1=Nodo(sub.dato);
-			Nodo aux2=raiz;
-			contieneSubarbol(aux1, aux2);
+			int equIzq=esEquilibrado(aux.izq);
+			int equDer=esEquilibrado(aux.der);
+			if(equIzq-equDer<-1 || equIzq-equDer>1)
+				return -3;
+			return Math.max(equIzq, equDer)+1;
 		}
 	}
-	public boolean contieneSubarbol(Nodo aux1, Nodo aux2) {
-		
+
+	//Problema8
+	public void salidaAleatoria() {
+		Random rand = new Random();
+		salidaAleatoria(raiz, rand);
+	}
+	private void salidaAleatoria(Nodo<T> nodo, Random rand) {
+		if (nodo != null) {
+			if (rand.nextBoolean()) {
+				System.out.print(nodo.dato + " ");
+			}
+			salidaAleatoria(nodo.izq, rand);
+			if (!rand.nextBoolean()) {
+				System.out.print(nodo.dato + " ");
+			}
+			salidaAleatoria(nodo.der, rand);
+		}
+	}
+
+	//Problema9
+	public void insertarAzar(T dato) {
+		Random rand = new Random();
+		Nodo nuevoNodo = new Nodo(dato);
+
+		if (raiz == null) {
+			raiz = nuevoNodo;
+			return;
+		}
+
+		Nodo actual = raiz;
+		while (true) {
+			if (rand.nextBoolean()) {
+				if (actual.izq == null) {
+					actual.izq = nuevoNodo;
+					break;
+				} else {
+					actual = actual.izq;
+				}
+			} else {
+				if (actual.der == null) {
+					actual.der = nuevoNodo;
+					break;
+				} else {
+					actual = actual.der;
+				}
+			}
+		}
+	}
+
+	//Problema10
+	public boolean esABB(ABB<T> x) {
+		return esABB(raiz, null, null);
+	}
+	private boolean esABB(Nodo<T> nodo, T min, T max) {
+		if (nodo == null) {
+			return true;
+		}
+		if ((min != null && nodo.dato.compareTo(min) <= 0) || (max != null && nodo.dato.compareTo(max) >= 0)) {
+			return false;
+		}
+		return esABB(nodo.izq, min, nodo.dato) && esABB(nodo.der, nodo.dato, max);
 	}
 	
-
 	public boolean estaVacio() {
 		return raiz == null;
 	}
