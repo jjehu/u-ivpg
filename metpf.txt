@@ -1,0 +1,27 @@
+# Fixed Point Method
+
+import numpy as np
+import matplotlib.pyplot as plt
+def fx(x):
+    return 8*x-np.cos(x)-2*x**2
+def gx(x):
+    return (np.cos(x)+2*x**2)/8
+Tolerancia = 0.0001
+xi = 0
+Error = np.abs(gx(xi) - xi)
+i = 0
+while(Error > Tolerancia and i < 100):
+    print(i, 'xi=', xi, 'f(xi)=', fx(xi), 'g(xi)=', gx(xi), 'Error V=', Error)
+    if i > 0:
+        Error = np.abs(gx(xi) - xi)
+    xi = gx(xi)
+    i = i + 1
+print('El valor de x, tal que f(x)=0 es:', xi)
+x = np.linspace(-4, 4, 100)
+plt.title('Fixed Point Method')
+plt.plot(x, fx(x), label='f(x)')
+plt.plot(x, gx(x), label='g(x)')
+plt.axvline(xi, label=f"f(x)=0, x={xi:.6f}", color='k')
+plt.legend(loc="upper right")
+plt.grid()
+plt.show()
